@@ -1,0 +1,32 @@
+{
+  "name": "@shieldlabs/js",
+  "version": "0.0.0",
+  "description": "Lightweight browser loader for ShieldLabs: loads the collection agent from CDN and returns identification results.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["shieldlabs", "device-intelligence", "visitor-identification", "risk-score", "fingerprinting"],
+  "repository": { "type": "git", "url": "git+https://github.com/ShieldLabs-ai/shieldlabs-js.git" },
+  "homepage": "https://shieldlabs.ai",
+  "bugs": { "url": "https://github.com/ShieldLabs-ai/shieldlabs-js/issues" },
+  "license": "MIT",
+  "publishConfig": { "access": "public" },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  }
+}
