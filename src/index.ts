@@ -4,9 +4,6 @@
  * This package contains NO signal-collection logic. It only loads the
  * ShieldLabs agent from the CDN (cdn.shieldlabs.ai) and exposes its result.
  * All collection and scoring happen inside the hosted agent and the API.
- *
- * Status: pre-launch scaffold. The public surface below is a placeholder and
- * will be finalized from the OpenAPI specification before the first release.
  */
 
 export interface ShieldLabsOptions {
@@ -27,13 +24,15 @@ export interface IdentificationResult {
   requestId: string;
 }
 
-const DEFAULT_SCRIPT_URL = "https://cdn.shieldlabs.ai/agent.js";
+export const DEFAULT_SCRIPT_URL = "https://cdn.shieldlabs.ai/snippet.js";
 
 /**
  * Load the ShieldLabs agent and return the current identification result.
- * Not implemented yet — placeholder for the pre-launch scaffold.
+ * Full browser loader lands with the first published release; until then this
+ * throws so integrators fail loudly rather than silently.
  */
 export async function getResult(_options: ShieldLabsOptions): Promise<IdentificationResult> {
-  void DEFAULT_SCRIPT_URL;
-  throw new Error("@shieldlabs/js is not published yet. See https://shieldlabs.ai");
+  throw new Error(
+    "@shieldlabs/js loader is not published yet. Use the snippet from https://docs.shieldlabs.ai until then.",
+  );
 }
