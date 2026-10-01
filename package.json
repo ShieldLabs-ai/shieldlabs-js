@@ -1,6 +1,6 @@
 {
   "name": "@shieldlabs-ai/js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Browser loader for ShieldLabs device intelligence: loads the hosted agent from the ShieldLabs CDN and returns a request ID for every identification.",
   "keywords": [
     "shieldlabs",
