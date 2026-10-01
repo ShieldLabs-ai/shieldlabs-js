@@ -8,7 +8,7 @@ describe('server-side rendering and workers (no window, no document)', () => {
     expect(typeof window).toBe('undefined');
     const sdk = await import('../src/index');
     expect(typeof sdk.load).toBe('function');
-    expect(sdk.VERSION).toBe('1.0.0');
+    expect(sdk.VERSION).toBe('1.0.1');
   });
 
   it('load() rejects with unsupported_environment and imports nothing', async () => {
