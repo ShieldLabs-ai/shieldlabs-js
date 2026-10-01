@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ShieldLabs signup example (Vite)</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 28rem; margin: 3rem auto; padding: 0 1rem; }
+      label { display: block; margin: 0 0 1rem; }
+      input { display: block; width: 100%; padding: 0.5rem; margin-top: 0.25rem; box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Create an account</h1>
+      <form id="signup">
+        <label>Email <input name="email" type="email" autocomplete="email" required /></label>
+        <label>Password <input name="password" type="password" autocomplete="new-password" required /></label>
+        <button type="submit">Sign up</button>
+      </form>
+      <p id="status" role="status"></p>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

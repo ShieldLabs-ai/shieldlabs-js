@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ShieldLabs signup example (script tag)</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 28rem; margin: 3rem auto; padding: 0 1rem; }
+      label { display: block; margin: 0 0 1rem; }
+      input { display: block; width: 100%; padding: 0.5rem; margin-top: 0.25rem; box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <h1>Create an account</h1>
+
+    <!-- A classic full-page form post to your server. -->
+    <form id="signup" action="/signup" method="post">
+      <label>Email <input name="email" type="email" autocomplete="email" required /></label>
+      <label>Password <input name="password" type="password" autocomplete="new-password" required /></label>
+      <input type="hidden" name="requestId" />
+      <button type="submit">Sign up</button>
+    </form>
+
+    <!--
+      The IIFE build of @shieldlabs-ai/js (global ShieldLabsJS). In this repository, run `npm run build`
+      and serve the repository root on localhost. After publication the same file is on public npm
+      CDNs, for example:
+        <script src="https://cdn.jsdelivr.net/npm/@shieldlabs-ai/js@1.0.0/dist/shieldlabs.iife.js"></script>
+      Either way, the loader imports the agent itself from https://cdn.shieldlabs.ai.
+    -->
+    <script src="../../dist/shieldlabs.iife.js"></script>
+    <script>
+      const PUBLIC_KEY = '0123456789abcdef0123456789abcdef'; // the Public Key of your domain
+      const form = document.getElementById('signup');
+
+      // identifyOnInteraction() starts the identification on the first interaction with the form,
+      // so it has finished posting long before the page navigates. The handle is created once the
+      // agent has loaded. load() reuses the loaded agent on every call and tries again after a
+      // failed load, so a submit after a passing network error still gets an identification.
+      let handle;
+      async function identifier() {
+        const agent = await ShieldLabsJS.load({ publicKey: PUBLIC_KEY });
+        if (!handle) handle = agent.identifyOnInteraction(form);
+        return handle;
+      }
+      identifier().catch((error) => console.warn('ShieldLabs:', error.code, error.message));
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try {
+          const { requestId } = await (await identifier()).take();
+          form.elements.namedItem('requestId').value = requestId;
+        } catch (error) {
+          // No identification: submit anyway. Your server treats a missing requestId as unverified.
+          console.warn('ShieldLabs:', error.code, error.message);
+        }
+        form.submit(); // your server reads the verdict for requestId with a ShieldLabs server SDK
+      });
+    </script>
+  </body>
+</html>
