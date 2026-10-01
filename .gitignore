@@ -1,12 +1,17 @@
+# Dependencies and build output
 node_modules/
 dist/
-build/
-*.log
+coverage/
 *.tgz
+*.log
+
+# Local environment
 .env
 .env.*
-.DS_Store
-coverage/
-.turbo/
+!.env.example
 
-.history
+# Editors and OS
+.DS_Store
+.history/
+.idea/
+.vscode/
