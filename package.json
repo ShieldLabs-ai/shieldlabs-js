@@ -60,6 +60,8 @@
     "test": "vitest run",
     "test:browser": "npm run build && vitest run --config vitest.browser.config.ts",
     "size": "node scripts/size.mjs",
+    "check:dist": "node scripts/check-dist-version.mjs",
+    "prepack": "npm run build >&2 && npm run check:dist >&2",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

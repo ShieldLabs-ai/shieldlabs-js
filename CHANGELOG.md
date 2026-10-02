@@ -6,6 +6,12 @@ All notable changes to `@shieldlabs-ai/js` are documented in this file. The form
 
 ## [Unreleased]
 
+### Fixed
+
+- `npm pack` rebuilds the distributable files and checks that the ESM, CommonJS, browser
+  bundle and TypeScript declarations all report the package version. Stale versioned
+  artifacts stop packaging before an archive can be released.
+
 ## [1.0.1] - 2026-10-01
 
 ### Fixed
