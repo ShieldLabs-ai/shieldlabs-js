@@ -93,6 +93,8 @@ describe('ESM and CJS builds', () => {
 
   it.each(['index.d.ts', 'index.d.cts'])('%s declares the public types', (file) => {
     const types = read(file);
+    const version = /\bdeclare const VERSION\s*=\s*(["'])([^"']+)\1\s*;/.exec(types);
+    expect(version?.[2]).toBe(pkg.version);
     for (const name of [
       'LoadOptions',
       'IdentifyOptions',
