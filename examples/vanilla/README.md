@@ -2,7 +2,7 @@
 
 A signup form without a bundler. It loads the IIFE build of `@shieldlabs-ai/js` (global
 `ShieldLabsJS`), starts an identification on the first interaction with the form and posts the
-`requestId` to your server in a hidden field.
+`identificationId` to your server in a hidden field.
 
 ## Run it
 

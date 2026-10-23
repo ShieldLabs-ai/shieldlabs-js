@@ -93,7 +93,7 @@ function identifyInPage(page: Page, timeout?: number): Promise<string> {
     async ({ publicKey, timeout }) => {
       try {
         const agent = await window.sdk.load(timeout === undefined ? { publicKey } : { publicKey, timeout });
-        return (await agent.identify()).requestId;
+        return (await agent.identify()).identificationId;
       } catch (error) {
         return 'error:' + String((error as { code?: unknown }).code);
       }

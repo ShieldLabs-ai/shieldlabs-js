@@ -17,7 +17,7 @@
     <form id="signup" action="/signup" method="post">
       <label>Email <input name="email" type="email" autocomplete="email" required /></label>
       <label>Password <input name="password" type="password" autocomplete="new-password" required /></label>
-      <input type="hidden" name="requestId" />
+      <input type="hidden" name="identificationId" />
       <button type="submit">Sign up</button>
     </form>
 
@@ -48,13 +48,13 @@
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         try {
-          const { requestId } = await (await identifier()).take();
-          form.elements.namedItem('requestId').value = requestId;
+          const { identificationId } = await (await identifier()).take();
+          form.elements.namedItem('identificationId').value = identificationId;
         } catch (error) {
-          // No identification: submit anyway. Your server treats a missing requestId as unverified.
+          // No identification: submit anyway. Your server treats a missing identificationId as unverified.
           console.warn('ShieldLabs:', error.code, error.message);
         }
-        form.submit(); // your server reads the verdict for requestId with a ShieldLabs server SDK
+        form.submit(); // your server reads the verdict for identificationId with a ShieldLabs server SDK
       });
     </script>
   </body>

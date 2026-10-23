@@ -24,7 +24,7 @@ describe('identify()', () => {
   it('calls forceCheckAnonymous with an options object and resolves the request ID', async () => {
     const { agent, fake } = await loaded();
     const result = await agent.identify();
-    expect(result.requestId).toMatch(UUID);
+    expect(result.identificationId).toMatch(UUID);
     expect(result.userId).toBeNull();
     expect(fake.calls).toHaveLength(1);
     const call = fake.calls[0]!;
@@ -37,7 +37,7 @@ describe('identify()', () => {
   it('calls forceCheckAuthenticatedUser with the User HID and an options object', async () => {
     const { agent, fake } = await loaded();
     const result = await agent.identify({ userId: USER_HID });
-    expect(result).toEqual({ requestId: expect.stringMatching(UUID) as unknown, userId: USER_HID });
+    expect(result).toEqual({ identificationId: expect.stringMatching(UUID) as unknown, userId: USER_HID });
     const call = fake.calls[0]!;
     expect(call.name).toBe('forceCheckAuthenticatedUser');
     expect(call.args[0]).toBe(USER_HID);
@@ -48,7 +48,7 @@ describe('identify()', () => {
     const { agent, fake } = await loaded();
     const first = await agent.identify();
     const second = await agent.identify();
-    expect(first.requestId).not.toBe(second.requestId);
+    expect(first.identificationId).not.toBe(second.identificationId);
     expect(fake.calls.map((call) => call.name)).toEqual(['forceCheckAnonymous', 'forceCheckAnonymous']);
   });
 
@@ -109,7 +109,7 @@ describe('identify()', () => {
     importAgent.mockResolvedValue(module);
     const agent = await sdk.load({ publicKey: PUBLIC_KEY });
     await expect(agent.identify()).resolves.toEqual({
-      requestId: 'b6f1c7a2-7d7e-4f55-9a61-0f1f1b0e2a11',
+      identificationId: 'b6f1c7a2-7d7e-4f55-9a61-0f1f1b0e2a11',
       userId: null,
     });
   });
@@ -119,7 +119,7 @@ describe('check()', () => {
   it('calls checkAnonymous with an options object and resolves the request ID', async () => {
     const { agent, fake } = await loaded();
     const result = await agent.check();
-    expect(result).toEqual({ requestId: expect.stringMatching(UUID) as unknown, userId: null });
+    expect(result).toEqual({ identificationId: expect.stringMatching(UUID) as unknown, userId: null });
     expect(fake.calls[0]!.name).toBe('checkAnonymous');
     expect(typeof onInitializedOf(fake.calls[0]!.args[0])).toBe('function');
   });
@@ -222,7 +222,7 @@ describe('timeouts', () => {
     const { agent } = await loaded();
     const result = agent.identify();
     await flushMicrotasks();
-    await expect(result).resolves.toHaveProperty('requestId');
+    await expect(result).resolves.toHaveProperty('identificationId');
     expect(vi.getTimerCount()).toBe(0);
   });
 

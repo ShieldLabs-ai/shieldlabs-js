@@ -47,7 +47,7 @@ describe('identifyOnInteraction()', () => {
     expect(fake.calls).toHaveLength(1);
     expect(fake.calls[0]!.name).toBe('forceCheckAnonymous');
     const result = await handle.take();
-    expect(result.requestId).toMatch(/^[0-9a-f-]{36}$/);
+    expect(result.identificationId).toMatch(/^[0-9a-f-]{36}$/);
     expect(fake.calls).toHaveLength(1);
     handle.dispose();
   });
@@ -83,9 +83,9 @@ describe('identifyOnInteraction()', () => {
     expect(fake.calls).toHaveLength(2);
     const second = await handle.take();
 
-    expect(second.requestId).not.toBe(first.requestId);
+    expect(second.identificationId).not.toBe(first.identificationId);
     const third = await handle.take();
-    expect(third.requestId).not.toBe(second.requestId);
+    expect(third.identificationId).not.toBe(second.identificationId);
     expect(fake.calls).toHaveLength(3);
   });
 
@@ -97,7 +97,7 @@ describe('identifyOnInteraction()', () => {
     input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'x' }));
     expect(fake.calls).toHaveLength(2);
     const [first, second] = await Promise.all([pending, handle.take()]);
-    expect(first.requestId).not.toBe(second.requestId);
+    expect(first.identificationId).not.toBe(second.identificationId);
   });
 
   it('passes the User HID and timeout to identify()', async () => {
@@ -123,7 +123,7 @@ describe('identifyOnInteraction()', () => {
     fake.answer('not_initialized');
     input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
     await flushMicrotasks();
-    await expect(handle.take()).resolves.toHaveProperty('requestId');
+    await expect(handle.take()).resolves.toHaveProperty('identificationId');
     expect(fake.calls).toHaveLength(2);
   });
 
@@ -136,7 +136,7 @@ describe('identifyOnInteraction()', () => {
     await vi.advanceTimersByTimeAsync(4 * 60 * 1000 - 1);
     const taken = handle.take();
     await vi.advanceTimersByTimeAsync(0);
-    await expect(taken).resolves.toMatchObject({ requestId: fake.answers[0]!.requestID });
+    await expect(taken).resolves.toMatchObject({ identificationId: fake.answers[0]!.requestID });
     expect(fake.calls).toHaveLength(1);
   });
 
@@ -156,8 +156,8 @@ describe('identifyOnInteraction()', () => {
 
     // The fresh identification is the one handed out, not the stale early one.
     expect(fake.answers).toHaveLength(2);
-    expect(result.requestId).toBe(fake.answers[1]!.requestID);
-    expect(result.requestId).not.toBe(fake.answers[0]!.requestID);
+    expect(result.identificationId).toBe(fake.answers[1]!.requestID);
+    expect(result.identificationId).not.toBe(fake.answers[0]!.requestID);
   });
 
   it('the next interaction replaces a stale early identification', async () => {
@@ -170,7 +170,7 @@ describe('identifyOnInteraction()', () => {
     expect(fake.calls).toHaveLength(2);
     const taken = handle.take();
     await vi.advanceTimersByTimeAsync(0);
-    await expect(taken).resolves.toHaveProperty('requestId');
+    await expect(taken).resolves.toHaveProperty('identificationId');
     expect(fake.calls).toHaveLength(2);
   });
 
@@ -214,7 +214,7 @@ describe('identifyOnInteraction()', () => {
 
     const taken = handle.take();
     await vi.advanceTimersByTimeAsync(0);
-    await expect(taken).resolves.toHaveProperty('requestId');
+    await expect(taken).resolves.toHaveProperty('identificationId');
     expect(fake.calls).toHaveLength(3);
   });
 
@@ -232,7 +232,7 @@ describe('identifyOnInteraction()', () => {
     expect(fake.calls).toHaveLength(2);
     const taken = handle.take();
     await vi.advanceTimersByTimeAsync(0);
-    await expect(taken).resolves.toHaveProperty('requestId');
+    await expect(taken).resolves.toHaveProperty('identificationId');
     expect(vi.getTimerCount()).toBe(0);
   });
 

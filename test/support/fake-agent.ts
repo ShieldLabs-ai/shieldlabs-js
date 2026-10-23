@@ -28,7 +28,7 @@ const WINDOW_MS = 5 * 60 * 1000;
 let uuidCounter = 0;
 
 /** Deterministic UUIDv4-shaped request IDs. */
-export function nextRequestId(): string {
+export function nextIdentificationId(): string {
   uuidCounter += 1;
   const tail = uuidCounter.toString(16).padStart(12, '0');
   return `3f2b8c1e-5d4a-4b6f-9e2d-${tail}`;
@@ -73,7 +73,7 @@ export function createFakeAgent() {
     const result =
       answer === 'not_initialized'
         ? Object.freeze({ status: 'not_initialized' })
-        : Object.freeze({ status: 'initialized', requestID: nextRequestId() });
+        : Object.freeze({ status: 'initialized', requestID: nextIdentificationId() });
     if (answer === 'silent') {
       held.push(() => {
         dispatch(handler, result);
