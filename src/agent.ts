@@ -15,7 +15,7 @@ export interface IdentifyOptions {
 
 export interface IdentifyResult {
   /** Send this to your backend with the protected action. */
-  requestId: string;
+  identificationId: string;
   /** The User HID used, `null` for anonymous checks. */
   userId: string | null;
 }
@@ -78,12 +78,12 @@ function run(mod: AgentModule, force: boolean, options: unknown, defaultTimeout:
       reject(new ShieldLabsError('timeout', 'The agent did not answer within ' + String(timeout) + ' ms.'));
     }, timeout);
 
-    const settle = (requestId: unknown, cause?: unknown): void => {
+    const settle = (identificationId: unknown, cause?: unknown): void => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      if (typeof requestId === 'string' && requestId !== '') {
-        resolve({ requestId, userId: userId ?? null });
+      if (typeof identificationId === 'string' && identificationId !== '') {
+        resolve({ identificationId, userId: userId ?? null });
       } else {
         reject(new ShieldLabsError('not_initialized', 'The agent did not start an identification.', cause));
       }

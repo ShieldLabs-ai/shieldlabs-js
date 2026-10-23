@@ -26,10 +26,10 @@ identifier(form).catch((error: unknown) => {
 
 const submit = async (signupForm: HTMLFormElement): Promise<void> => {
   const data = new FormData(signupForm);
-  let requestId: string | null = null;
+  let identificationId: string | null = null;
   try {
     // One identification per submission: take() re-arms for the next attempt.
-    ({ requestId } = await (await identifier(signupForm)).take());
+    ({ identificationId } = await (await identifier(signupForm)).take());
   } catch (error) {
     // Without an identification your server treats the signup as unverified.
     status.textContent = describe(error);
@@ -39,12 +39,12 @@ const submit = async (signupForm: HTMLFormElement): Promise<void> => {
   const response = await fetch('/api/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: data.get('email'), password: data.get('password'), requestId }),
+    body: JSON.stringify({ email: data.get('email'), password: data.get('password'), identificationId }),
   });
 
   status.textContent = response.ok
     ? 'Account created.'
-    : `Your server answered ${String(response.status)}. It would receive requestId ${requestId ?? '(none)'}.`;
+    : `Your server answered ${String(response.status)}. It would receive identificationId ${identificationId ?? '(none)'}.`;
 };
 
 form.addEventListener('submit', (event) => {

@@ -18,8 +18,8 @@ that contains it).
 ## How it fits
 
 1. **Browser.** `@shieldlabs-ai/js` loads the agent and runs an identification. The page receives a
-   `requestId`.
-2. **Your backend.** It receives the `requestId` with the protected action (signup, login,
+   `identificationId`.
+2. **Your backend.** It receives the `identificationId` with the protected action (signup, login,
    checkout) and reads the verdict for it from the History API with a ShieldLabs server SDK, or
    receives it in a signed `identification.scored` webhook.
 3. **Decision.** Your backend acts on the Risk Score (bands: trusted 0-29, suspicious 30-59,
@@ -28,7 +28,7 @@ that contains it).
 The browser only ever gets the request ID. The Risk Score, risk signals, detection flags, visitor ID
 and device ID are read on your server. The webhook is delivered once per identification today
 (1 second timeout, no retries), so use the History API when your backend must have the verdict, and
-make the webhook handler idempotent on `data.request_id`: future retries will resend identical bytes.
+make the webhook handler idempotent on `data.identification_id`: future retries will resend identical bytes.
 
 ## Install
 
@@ -71,19 +71,19 @@ load(options).catch(() => {}); // handled in the submit handler
 const form = document.querySelector<HTMLFormElement>('#signup')!;
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  let requestId: string | null = null;
+  let identificationId: string | null = null;
   try {
     // load() again: it returns the loaded agent at once, waits for a load that is still running
     // and tries again after a failed one.
     const agent = await load(options);
-    ({ requestId } = await agent.identify());
+    ({ identificationId } = await agent.identify());
   } catch {
     // No identification: send the signup anyway. Your server treats it as unverified.
   }
   await fetch('/api/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: form.email.value, requestId }),
+    body: JSON.stringify({ email: form.email.value, identificationId }),
   });
 });
 ```
@@ -93,8 +93,8 @@ so the submit handler is never attached. Some build targets also reject top-leve
 `load()` again wherever you need the agent rather than keeping its first promise: that promise stays
 rejected after a passing network error or a slow load, and a new call recovers from both.
 
-On your server, read the verdict for `requestId` with a ShieldLabs server SDK, for example
-`identifications.get(requestId)` in [`@shieldlabs-ai/node`](https://github.com/ShieldLabs-ai/shieldlabs-node),
+On your server, read the verdict for `identificationId` with a ShieldLabs server SDK, for example
+`identifications.get(identificationId)` in [`@shieldlabs-ai/node`](https://github.com/ShieldLabs-ai/shieldlabs-node),
 which waits until the identification has been scored. The History row appears about 1 to 3 seconds
 after the browser call and can be refined for up to about 10 seconds while follow-up checks finish,
 so start the identification when the user begins the action, for example with
@@ -107,7 +107,7 @@ so start the identification when the user begins the action, for example with
 > posts, start the identification early with `identifyOnInteraction()` (see the guide).
 
 > **Test on a registered domain.** ShieldLabs records identifications only for the domains
-> registered in your account. On `localhost` the page still receives a `requestId`, but the
+> registered in your account. On `localhost` the page still receives a `identificationId`, but the
 > identification is rejected with `401` and your backend never finds it. Test on a development
 > domain with its own keys, as described in [Environments](https://docs.shieldlabs.ai/setup/environments).
 
@@ -136,9 +136,9 @@ identifier().catch(() => {}); // start loading now; errors are handled in the su
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  let requestId: string | null = null;
+  let identificationId: string | null = null;
   try {
-    ({ requestId } = await (await identifier()).take());
+    ({ identificationId } = await (await identifier()).take());
   } catch (error) {
     // No identification: send the form anyway. Your server treats it as unverified.
     if (error instanceof ShieldLabsError) console.warn(error.code, error.message);
@@ -146,7 +146,7 @@ form.addEventListener('submit', async (event) => {
   await fetch('/api/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: form.email.value, requestId }),
+    body: JSON.stringify({ email: form.email.value, identificationId }),
   });
 });
 ```
@@ -156,7 +156,7 @@ For a classic full-page post, put the request ID in a hidden field and submit th
 ```html
 <form id="signup" action="/signup" method="post">
   <input name="email" type="email" required />
-  <input type="hidden" name="requestId" />
+  <input type="hidden" name="identificationId" />
   <button>Sign up</button>
 </form>
 ```
@@ -165,10 +165,10 @@ For a classic full-page post, put the request ID in a hidden field and submit th
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
-    const { requestId } = await (await identifier()).take();
-    (form.elements.namedItem('requestId') as HTMLInputElement).value = requestId;
+    const { identificationId } = await (await identifier()).take();
+    (form.elements.namedItem('identificationId') as HTMLInputElement).value = identificationId;
   } catch {
-    // No identification: submit without a requestId. Your server treats it as unverified.
+    // No identification: submit without a identificationId. Your server treats it as unverified.
   }
   form.submit();
 });
@@ -207,7 +207,7 @@ const hid = userHid(String(account.id), userHidSecret); // a secret you keep on 
 async function identifySignedIn(userHid: string): Promise<string | null> {
   try {
     const agent = await load(options);
-    return (await agent.identify({ userId: userHid })).requestId;
+    return (await agent.identify({ userId: userHid })).identificationId;
   } catch {
     return null; // no identification: send the action anyway, your server treats it as unverified
   }
@@ -234,7 +234,7 @@ async function monitorVisit(hid: string): Promise<void> {
     const agent = await load(options);
     const result = await agent.check({ userId: hid });
     if (result) {
-      // Optional: send result.requestId to your backend to follow the visit.
+      // Optional: send result.identificationId to your backend to follow the visit.
     }
   } catch {
     // Passive monitoring only: nothing to do when the agent is not available.
@@ -357,7 +357,7 @@ purpose. Never pass directly identifying data as the User HID.
 
 | Field | Type | Description |
 |---|---|---|
-| `requestId` | `string` | Send it to your backend with the protected action |
+| `identificationId` | `string` | Send it to your backend with the protected action |
 | `userId` | `string \| null` | The User HID used, `null` for anonymous checks |
 
 `InteractionIdentifier`
@@ -379,7 +379,7 @@ Every error is a `ShieldLabsError`. Branch on `error.code`:
 | `not_initialized` | `identify()` only: the agent did not start an identification, for example because another one is running in this or another tab. `check()` resolves `null` instead | Retry once later, or continue without an identification |
 | `timeout` | The agent did not load, or an agent call did not answer, within the timeout (default 10 seconds) | Continue without an identification. A load that timed out keeps running, and a later `load()` call uses it once it arrives; a late answer to an agent call is ignored |
 
-Whenever there is no identification, send the protected action anyway without a `requestId`: your
+Whenever there is no identification, send the protected action anyway without a `identificationId`: your
 backend treats a missing identification as unverified (for example step-up or review), never as
 clean.
 

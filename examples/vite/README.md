@@ -2,7 +2,7 @@
 
 A small TypeScript signup form. It loads the ShieldLabs agent with `@shieldlabs-ai/js`, starts an
 identification on the first interaction with the form (`identifyOnInteraction`) and sends the
-`requestId` to your backend with the signup request.
+`identificationId` to your backend with the signup request.
 
 ## Run it
 
@@ -13,8 +13,8 @@ npm run dev
 ```
 
 Open the URL Vite prints (for example <http://localhost:5173>). The form posts JSON to
-`/api/signup`: point it at your server, which reads the verdict for `requestId` with a ShieldLabs
-server SDK (for example `identifications.get(requestId)` in `@shieldlabs-ai/node`).
+`/api/signup`: point it at your server, which reads the verdict for `identificationId` with a ShieldLabs
+server SDK (for example `identifications.get(identificationId)` in `@shieldlabs-ai/node`).
 
 ShieldLabs accepts identifications only from registered domains. On `localhost` the request ID
 still reaches the page, but no identification is recorded. Serve the example from a registered

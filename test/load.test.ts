@@ -250,7 +250,7 @@ describe('load() memoization', () => {
 
     const agent = await sdk.load({ publicKey: PUBLIC_KEY });
     expect(importAgent).toHaveBeenCalledTimes(2);
-    await expect(agent.identify()).resolves.toHaveProperty('requestId');
+    await expect(agent.identify()).resolves.toHaveProperty('identificationId');
   });
 
   it('retries with a new URL each time, because browsers remember a failed module load per URL', async () => {
@@ -268,7 +268,7 @@ describe('load() memoization', () => {
     await sdk.load({ publicKey: PUBLIC_KEY });
 
     expect(importAgent.mock.calls.map(([url]) => url)).toEqual([PROD, `${PROD}&retry=1`, `${PROD}&retry=2`]);
-    await expect(agent.identify()).resolves.toHaveProperty('requestId');
+    await expect(agent.identify()).resolves.toHaveProperty('identificationId');
   });
 
   it('counts failures per agent URL', async () => {
@@ -387,7 +387,7 @@ describe('load() timeout', () => {
     expect(vi.getTimerCount()).toBe(0);
     const identified = agent.identify();
     await vi.advanceTimersByTimeAsync(0);
-    await expect(identified).resolves.toHaveProperty('requestId');
+    await expect(identified).resolves.toHaveProperty('identificationId');
   });
 
   it('retries with a new URL when the import that timed out fails later', async () => {
