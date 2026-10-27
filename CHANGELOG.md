@@ -4,6 +4,11 @@ All notable changes to `@shieldlabs-ai/js` are documented in this file. The form
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-28
+
+- Prepare an unpublished installation candidate with the current identification ID contract.
+- Validate the packed artifacts used by the clean installation; no registry publication is performed.
+
 ## [1.0.2] - 2026-10-05
 
 ### Fixed
