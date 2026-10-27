@@ -6,8 +6,16 @@ All notable changes to `@shieldlabs-ai/js` are documented in this file. The form
 
 ## [1.1.0] - 2026-10-28
 
-- Prepare an unpublished installation candidate with the current identification ID contract.
-- Validate the packed artifacts used by the clean installation; no registry publication is performed.
+### Changed
+
+- Browser identification results use `identificationId`. When updating from 1.0.1,
+  replace reads of `result.requestId` with `result.identificationId` and send the same
+  UUID to your backend. MCP arguments remain `request_id`.
+
+### Fixed
+
+- Rebuild packed distributions and verify their version in ESM, CommonJS, IIFE and
+  TypeScript artifacts so the npm package cannot silently contain stale builds.
 
 ## [1.0.2] - 2026-10-05
 
