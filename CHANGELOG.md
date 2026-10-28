@@ -4,7 +4,26 @@ All notable changes to `@shieldlabs-ai/js` are documented in this file. The form
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-10-28
+
+### Changed
+
+- Browser identification results use `identificationId`. When updating from 1.0.1,
+  replace reads of `result.requestId` with `result.identificationId` and send the same
+  UUID to your backend. MCP arguments remain `request_id`.
+
+### Fixed
+
+- Rebuild packed distributions and verify their version in ESM, CommonJS, IIFE and
+  TypeScript artifacts so the npm package cannot silently contain stale builds.
+
+## [1.0.2] - 2026-10-05
+
+### Fixed
+
+- `npm pack` rebuilds the distributable files and checks that the ESM, CommonJS, browser
+  bundle and TypeScript declarations all report the package version. Stale versioned
+  artifacts stop packaging before an archive can be released.
 
 ## [1.0.1] - 2026-10-01
 

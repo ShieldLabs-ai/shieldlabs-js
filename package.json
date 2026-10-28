@@ -1,6 +1,6 @@
 {
   "name": "@shieldlabs-ai/js",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Browser loader for ShieldLabs device intelligence: loads the hosted agent from the ShieldLabs CDN and returns a request ID for every identification.",
   "keywords": [
     "shieldlabs",
@@ -60,6 +60,8 @@
     "test": "vitest run",
     "test:browser": "npm run build && vitest run --config vitest.browser.config.ts",
     "size": "node scripts/size.mjs",
+    "check:dist": "node scripts/check-dist-version.mjs",
+    "prepack": "npm run build >&2 && npm run check:dist >&2",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
